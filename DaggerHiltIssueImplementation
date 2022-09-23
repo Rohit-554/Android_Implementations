@@ -1,0 +1,14 @@
+   //Put it above Plugins
+   buildscript {
+    dependencies {
+        classpath 'com.google.dagger:hilt-android-gradle-plugin:2.38.1'
+     }
+   }
+    
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+    
+    implementation "com.google.dagger:hilt-android:2.38.1"
+    kapt "com.google.dagger:hilt-compiler:2.38.1"
+    //add this because dagger still uses old kotlin metadata
+    kapt "org.jetbrains.kotlinx:kotlinx-metadata-jvm:0.5.0"
