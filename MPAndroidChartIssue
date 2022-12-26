@@ -1,0 +1,3 @@
+//When updating a chart use this 
+//This will update without toucing the screen
+chart.invalidate()
