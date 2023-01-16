@@ -1,3 +1,8 @@
+
+  //add this to the plugins
+  id 'kotlin-kapt'
+  
+  //add this to dependencies
 //live data
     def lifecycle_version = "2.6.0-alpha01"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
