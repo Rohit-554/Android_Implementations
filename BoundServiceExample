@@ -1,0 +1,48 @@
+//in Service.kt
+private val localBinder = LocalBinder()  
+
+class service.kt{
+    override fun onBind(p0: Intent?): IBinder? {
+        return localBinder
+    }
+    //BinderClass at the end of service.kt
+    inner class LocalBinder:Binder(){
+        fun getBindServiceInstance():SwipeService{
+            return this@SwipeService
+        }
+    }
+}
+
+//in MainActivity.kt
+    private var mBound: Boolean = false
+class MainActivity.kt{
+//BinderClassIntialization
+    private val serviceConnection = object : ServiceConnection {
+        override fun onServiceConnected(p0: ComponentName?, p1: IBinder?) {
+            mBound = true
+            val localBinder = p1 as SwipeService.LocalBinder
+            swipeService = localBinder.getBindServiceInstance()
+        }
+
+        override fun onServiceDisconnected(p0: ComponentName?) {
+            mBound = false
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val intent = Intent(this, SwipeService::class.java)
+        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
+    }
+
+    override fun onStop() {
+        super.onStop()
+         Unbind from the service
+        if (mBound) {
+            unbindService(serviceConnection)
+            mBound = false
+        }
+    }
+    
+}
+    
