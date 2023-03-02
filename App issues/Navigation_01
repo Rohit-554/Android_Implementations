@@ -1,0 +1,9 @@
+
+//if i have two fragments in bottom navigation bar (see below)
+https://stackoverflow.com/questions/71089052/android-navigation-component-bottomnavigationviews-selected-tab-icon-is-not-u
+
+bottomNavigationView.setOnItemSelectedListener { item ->
+  // In order to get the expected behavior, you have to call default Navigation method manually
+  NavigationUI.onNavDestinationSelected(item, navController)
+  return@setOnItemSelectedListener true
+}
