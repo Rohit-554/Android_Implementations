@@ -1,0 +1,105 @@
+Instructions
+This is just a sample code the full code is avaialable on my github account just search 1stAndroidWEb3Project ...
+I am using local ganache
+1. First create a wallet using the WalletUtils like this and define the credential 
+
+
+
+private lateinit var credential: Credentials
+
+fun createWallet(v:View){
+        val credentialPassword = findViewById<EditText>(R.id.password)
+        val password = credentialPassword.text.toString()
+        try {
+            walletName = WalletUtils.generateLightNewWalletFile(password, file)
+            Toast.makeText(
+                applicationContext, "Wallet created successfully",
+                Toast.LENGTH_LONG
+            ).show()
+            credential = WalletUtils.loadCredentials(password, file.absolutePath + "/" + walletName)
+            txtAddress.text=credential.address
+            Log.e("WalletAddress",credential.address)
+        }catch (e:Exception){
+            Toast.makeText(
+                applicationContext, "Error creating wallet",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
+
+//this is for transaction
+when the new address will be generated first put some ethers to that address using metamask and the adress that is generated, and finally send 
+if you not put the ethers to the local address then it will show you the error insufficient funds gas*gasprice+value ...
+
+@Throws(java.lang.Exception::class)
+    fun makeTransaction(v: View?) {
+        // get the amout of eth value the user wants to send
+        val Edtvalue = findViewById<EditText>(R.id.ethvalue)
+        val value = Edtvalue.text.toString().toBigDecimal()
+        try {
+            //add chain id also
+            val chainId = web3.netVersion().send().netVersion;
+
+            val ethGetTransactionCount = web3.ethGetTransactionCount(
+                credential.address,
+                DefaultBlockParameterName.LATEST
+            ).sendAsync().get()
+
+            val nonce = ethGetTransactionCount.transactionCount
+            val rawTransaction = RawTransaction.createEtherTransaction(
+                nonce,
+                BigInteger.valueOf(1000000000),
+                BigInteger.valueOf(21000),
+                "0xB1C96d36f796059a06cc317303cF998b4fB4BEa3",
+                Convert.toWei(value, Convert.Unit.ETHER).toBigInteger()
+            )
+            val signedMessage: ByteArray =
+                TransactionEncoder.signMessage(rawTransaction, credential)
+            val hexValue = Numeric.toHexString(signedMessage)
+            val ethSendTransaction: EthSendTransaction =
+                web3.ethSendRawTransaction(hexValue).sendAsync().get()
+                
+                
+
+//            val receipt: TransactionReceipt = Transfer.sendFundsEIP1559(
+//                web3,
+//                credential,
+//                "0xB1C96d36f796059a06cc317303cF998b4fB4BEa3",
+//                BigDecimal.valueOf(value),
+//                Convert.Unit.ETHER,
+//                BigInteger.valueOf(6721975L),
+//                DefaultGasProvider.GAS_LIMIT,
+//                BigInteger.valueOf(20000000000L),
+//            ).send()
+
+
+            //print credentialaddress
+            Log.d("credentialaddress", credential.address)
+            val gasPrice: BigInteger = estimateGas()
+            val gasLimit = BigInteger.valueOf(30000)
+            val networkGasTotal: BigInteger = gasLimit.multiply(gasPrice)
+
+
+            Log.d("ethgasprice","${web3.ethGasPrice().send().gasPrice}")
+            Log.d("transactionreceipt", " ${ethSendTransaction.transactionHash}")
+            if (ethSendTransaction.hasError()) {
+                val errorMessage = ethSendTransaction.error.message
+                Log.e("Transaction Error", errorMessage)
+            } else {
+                val transactionHash = ethSendTransaction.transactionHash
+                Log.d("Transaction Hash", transactionHash)
+            }
+            Toast.makeText(
+                this,
+                "Transaction successful: ",
+                Toast.LENGTH_LONG
+            ).show()
+        } catch (e: java.lang.Exception) {
+            Log.d("errorweb32", e.message.toString())
+            Toast.makeText(
+                this,
+                "Transaction failed: " + e.message,
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
