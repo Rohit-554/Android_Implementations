@@ -1,0 +1,34 @@
+//Official 
+// Registers a photo picker activity launcher in single-select mode.
+val pickMedia = registerForActivityResult(PickVisualMedia()) { uri ->
+    // Callback is invoked after the user selects a media item or closes the
+    // photo picker.
+    if (uri != null) {
+        Log.d("PhotoPicker", "Selected URI: $uri")
+    } else {
+        Log.d("PhotoPicker", "No media selected")
+    }
+}
+
+pickMedia.launch(PickVisualMediaRequest(PickVisualMedia.ImageOnly))
+
+
+**************************************************************************************************************************************************************************
+**************************************************************************************************************************************************************************
+
+//This worked for me!!
+
+val pickMedia = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            if (uri != null) {
+                Log.d("PhotoPicker", "Selected URI: $uri")
+                farmerListItemViewModel.setUri(uri)
+                binding.ivCustomimageselect.setImageURI(uri)
+                binding.tvClicktoupload.text = getString(R.string.image_uploaded)
+            } else {
+                Log.d("PhotoPicker", "No media selected")
+            }
+        }
+        
+        binding.cvCustomimage.setOnClickListener {
+            pickMedia.launch("image/*")
+        }
