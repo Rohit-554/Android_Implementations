@@ -1,0 +1,5 @@
+Go to the terminal in android studio move to the folder where the smart contract is -> install solcjs using npm -> 
+write the below code the deploy(you can give any name) here is the name of the folder where the abi and bin file will be stored 
+solcjs SupplyChainContract.sol --bin --abi --optimize -o deploy   
+
+for deploying 
