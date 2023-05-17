@@ -1,0 +1,4 @@
+android:layout_alignStart="@id/btn_preview_btn"
+                android:layout_alignEnd="@id/btn_preview_btn"
+                android:layout_alignTop="@id/btn_preview_btn"
+                android:layout_alignBottom="@id/btn_preview_btn"
