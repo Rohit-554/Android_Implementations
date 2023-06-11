@@ -1,0 +1,3 @@
+        //this is used for safe args
+        //val action = FarmerPreviewItemListFragmentDirections.actionFarmerPreviewItemListFragment2ToFarmerListItemFragment2(item)
+        //findNavController().navigate(action)
