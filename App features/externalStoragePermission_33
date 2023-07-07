@@ -1,0 +1,54 @@
+--inside manifest
+<uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+        tools:ignore = "ScopedStorage"
+        />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    
+
+-- inside viewmodel
+fun isManageStoragePermissionGranted(context:Context): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            Environment.isExternalStorageManager()
+        } else {
+            val result = ContextCompat.checkSelfPermission(context,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            )
+            return result == PackageManager.PERMISSION_GRANTED
+        }
+    }
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------    
+
+--  in your activity or fragment
+
+private fun askForPermission() {
+        if (!scanAllFilesViewModel.isManageStoragePermissionGranted(requireContext())) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                try {
+                    val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
+                    intent.addCategory("android.intent.category.DEFAULT")
+                    intent.data =
+                        Uri.parse(String.format("package:%s", requireActivity().packageName))
+                    startActivity(intent, Bundle.EMPTY)
+                } catch (e: Exception) {
+                    val intent = Intent()
+                    intent.action = Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION
+                    startActivity(intent)
+                }
+            } else {
+                requestPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+            }
+            scanInProgress()
+        }
+    }
+
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            scanInProgress()
+        } else {
+            Toast.makeText(requireContext(), getString(R.string.deny_perm_text), Toast.LENGTH_SHORT)
+                .show()
+        }
+    }
