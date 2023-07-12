@@ -1,2 +1,14 @@
 Watch out these 
 https://stackoverflow.com/questions/76347788/back-navigation-issue-nav-graph-issue-android
+
+
+//navigate up directly to the home fragment 
+//ex if you go from frag A -> frag B -> frag C -> and you want that when user goes in this pattern and press back button which is on the toolbar he should be reaching the fragment A
+//then use this 
+
+
+    override fun onSupportNavigateUp(): Boolean {
+        navController.popBackStack(R.id.earnCash, false)
+        //        return navController.navigateUp() || super.onSupportNavigateUp()
+        return true
+    }
