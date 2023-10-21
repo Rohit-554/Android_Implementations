@@ -1,0 +1,6 @@
+# For generating java wrappers for the solidity smart contract use 
+
+in cli: 
+
+web3j generate solidity -b SupplyChain_tsol_SupplyChainContract.bin -a SupplyChain_tsol_SupplyChainCo
+ntract.abi -p io.jadu.agrichain -o javawrappers
