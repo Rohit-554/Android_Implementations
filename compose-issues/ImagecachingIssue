@@ -1,0 +1,21 @@
+when you use 
+val painter = rememberAsyncImagePainter(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(signatureResponse?.signatureImage)
+                    .build(),
+            )
+
+// this caches the data and if the link doesn't change it will show the same image again and again 
+// IN order to change the image again and again change the link here 
+fun convertBitmapToMultiPart(bitmap: Bitmap): MultipartBody.Part {
+        val byteArrayOutputStream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
+        val byteArray = byteArrayOutputStream.toByteArray()
+
+        val requestFile = RequestBody.create("image/jpeg".toMediaTypeOrNull(), byteArray)
+        val currentTime = System.currentTimeMillis()
+        val mediaPart = MultipartBody.Part.createFormData("media", "$currentTime"+"image.jpg", requestFile)    //changing file name with current time 
+        return mediaPart
+    }
+
+//Good :) Now go and code
