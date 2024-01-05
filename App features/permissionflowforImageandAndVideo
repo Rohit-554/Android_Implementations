@@ -1,0 +1,19 @@
+val permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) READ_MEDIA_IMAGES else READ_EXTERNAL_STORAGE
+
+    //region request_for_storage_permission
+    private fun askStoragePermission() {
+        // This is only necessary for API level >= 33 (TIRAMISU)
+        if (ContextCompat.checkSelfPermission(requireActivity(), permission) == PackageManager.PERMISSION_GRANTED) {
+            imagePickerBottomSheet.show(childFragmentManager, imagePickerBottomSheet.tag)
+        } else {
+            requestPermissionLauncher.launch(permission)
+        }
+    }
+
+private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+        if (isGranted) {
+            imagePickerBottomSheet.show(childFragmentManager, imagePickerBottomSheet.tag)
+        } else if (!shouldShowRequestPermissionRationale(permission)) {
+            showPermissionErrorDialog()
+        }
+    }
