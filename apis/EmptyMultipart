@@ -1,0 +1,2 @@
+val emptyRequestBody = RequestBody.create(null, ByteArray(0))
+val emptyPart = MultipartBody.Part.createFormData("signatureImage", "", emptyRequestBody)
